@@ -5,9 +5,9 @@ package qi.chuangguo.weixinxposed;
  */
 
 public class VersionParam {
-
+    public static final String WECHAT_PACKAGE_NAME = "com.tencent.mm";
     public static final String networkRequest = "com.tencent.mm.y.as";
-    public static final String luckyMoneyReceiveUI = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI";
+    public static final String luckyMoneyReceiveUI = WECHAT_PACKAGE_NAME + ".plugin.luckymoney.ui.LuckyMoneyReceiveUI";
     public static final String receiveLuckyMoneyRequest = "com.tencent.mm.plugin.luckymoney.b.af";
     public static final String luckyMoneyRequest = "com.tencent.mm.plugin.luckymoney.b.ac";
     public static final String getNetworkByModelMethod = "CN";

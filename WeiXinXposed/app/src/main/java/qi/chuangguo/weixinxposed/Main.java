@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import static qi.chuangguo.weixinxposed.VersionParam.getNetworkByModelMethod;
@@ -34,12 +35,14 @@ public class Main implements IXposedHookLoadPackage {
                     super.beforeHookedMethod(param);
                     Log.i("Main", "beforeHookedMethod: 执行结束");
                 }
-
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     ContentValues localContentValues = (ContentValues)param.args[2];
                     String paramStr = (String)param.args[0];
+
+                    Log.i(TAG, "afterHookedMethod: localContentValues:"+localContentValues.toString());
+
                     if (!TextUtils.isEmpty(paramStr) && paramStr.equals("message")){
                         Integer type = localContentValues.getAsInteger("type");
                         if (type!=null){
@@ -47,7 +50,7 @@ public class Main implements IXposedHookLoadPackage {
                             if ((type.intValue()==436207665) || (type.intValue()==469762097)){
                                 handleLuckyMoney(localContentValues,loadPackageParam);
                             }else if (type.intValue()==10000){
-                                //已领取
+                                //已领取红包
                             }else if (type.intValue()==1){
                                 //普通消息
                             }else if (type.intValue()==3){
@@ -104,6 +107,20 @@ public class Main implements IXposedHookLoadPackage {
             }
         });
 
+
+        XposedHelpers.findAndHookMethod("com.tencent.mm.sdk.platformtools.bb", loadPackageParam.classLoader, "pu", int.class, new XC_MethodReplacement() {
+            @Override
+            protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                int gameType = (int) methodHookParam.args[0];
+                Log.i(TAG, "replaceHookedMethod: gameType:"+gameType);
+                if (gameType==5){
+                    return 6;
+                }else if (gameType==2){
+                    return 2;
+                }
+                return null;
+            }
+        });
 
     }
 
