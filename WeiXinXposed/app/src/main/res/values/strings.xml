@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeiXinXposed</string>
+    <string name="dice_value">dice_value</string>
+    <string name="rock_value">rock_value</string>
 </resources>

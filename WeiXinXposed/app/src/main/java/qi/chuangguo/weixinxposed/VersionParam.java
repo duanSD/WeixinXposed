@@ -13,4 +13,7 @@ public class VersionParam {
     public static final String getNetworkByModelMethod = "CN";
     public static String receiveUIParamName = "com.tencent.mm.ad.k";
     public static final String receiveUIFunctionName = "d";
+
+    public static final String gameClassName="com.tencent.mm.sdk.platformtools.bi";
+    public static final String gameMethonName="eI";
 }
