@@ -11,6 +11,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import qi.chuangguo.weixinxposed.util.HookClass;
 import qi.chuangguo.weixinxposed.util.PreferencesUtils;
 
 /**
@@ -32,8 +33,8 @@ public class RevokeMsgHook {
     }
 
     public void hook(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
-        Class clazz = XposedHelpers.findClass("com.tencent.wcdb.database.SQLiteDatabase", loadPackageParam.classLoader);
-        XposedHelpers.findAndHookMethod(clazz, "updateWithOnConflict", String.class, ContentValues.class, String.class, String[].class, int.class, new XC_MethodHook() {
+        Class clazz = XposedHelpers.findClass(HookClass.SQLITEDATABASE, loadPackageParam.classLoader);
+        XposedHelpers.findAndHookMethod(clazz, HookClass.UPDATEWITHONCONFLICT, String.class, ContentValues.class, String.class, String[].class, int.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);

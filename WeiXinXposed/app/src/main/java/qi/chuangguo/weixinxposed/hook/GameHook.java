@@ -6,7 +6,7 @@ import android.util.Log;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import qi.chuangguo.weixinxposed.VersionParam;
+import qi.chuangguo.weixinxposed.util.HookClass;
 import qi.chuangguo.weixinxposed.util.PreferencesUtils;
 
 /**
@@ -25,8 +25,8 @@ public class GameHook {
     }
 
     public void hook(final XC_LoadPackage.LoadPackageParam loadPackageParam){
-        Class gameClass = XposedHelpers.findClass(VersionParam.gameClassName, loadPackageParam.classLoader);
-        XposedHelpers.findAndHookMethod(gameClass, VersionParam.gameMethonName, int.class, int.class, new XC_MethodHook() {
+
+        XposedHelpers.findAndHookMethod(HookClass.gameClass, HookClass.gameMethonName, int.class, int.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
