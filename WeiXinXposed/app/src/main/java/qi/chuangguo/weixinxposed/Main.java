@@ -15,12 +15,7 @@ public class Main implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
         if (loadPackageParam.packageName.equals(wPackName)) {
-
             PackgeManagerHook.getInstance(wPackName).hookVersion(loadPackageParam);
-
-
-
-
         }
 
 

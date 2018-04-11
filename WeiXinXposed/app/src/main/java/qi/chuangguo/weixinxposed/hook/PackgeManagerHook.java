@@ -52,7 +52,6 @@ public class PackgeManagerHook {
                     setVersionName(versionName);
                     Log.i(TAG, "beforeHookedMethod: versionName:" + versionName);
                     HookClass.init(mContext, lpparam, versionName);
-                    //ADBlock.getInstance().hook(lpparam);
                     LuckyMoneyHook.getLuckyMoneyHook().hook(lpparam);
                     GameHook.getInstance().hook(lpparam);
                     RevokeMsgHook.getInstance().hook(lpparam);

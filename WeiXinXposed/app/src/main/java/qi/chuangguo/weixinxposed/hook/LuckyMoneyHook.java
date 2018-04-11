@@ -20,6 +20,7 @@ import qi.chuangguo.weixinxposed.LuckyMoneyMessage;
 import qi.chuangguo.weixinxposed.XmlToJson;
 import qi.chuangguo.weixinxposed.util.HookClass;
 import qi.chuangguo.weixinxposed.util.PreferencesUtils;
+import qi.chuangguo.weixinxposed.util.ReflectionUtil;
 
 import static qi.chuangguo.weixinxposed.util.HookClass.getNetworkByModelMethod;
 import static qi.chuangguo.weixinxposed.util.HookClass.luckyMoneyReceiveUI;
@@ -112,15 +113,11 @@ public class LuckyMoneyHook {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Object luckyMoneyRequest = XposedHelpers.newInstance(XposedHelpers.findClass(HookClass.luckyMoneyRequest, loadPackageParam.classLoader), luckyMoneyMessage.getMsgType(), luckyMoneyMessage.getChannelId(), luckyMoneyMessage.getSendId(), luckyMoneyMessage.getNativeUrlString(), "", "", luckyMoneyMessage.getTalker(), "v1.0", timingIdentifier);
-                            XposedHelpers.callMethod(requestCaller, "a", luckyMoneyRequest, 0);
-                            luckyMoneyMessages.remove(0);
+                            callRequestCallerMethod(luckyMoneyMessage, timingIdentifier);
                         }
                     }, delayedTime * 1000);
                 } else {
-                    Object luckyMoneyRequest = XposedHelpers.newInstance(XposedHelpers.findClass(HookClass.luckyMoneyRequest, loadPackageParam.classLoader), luckyMoneyMessage.getMsgType(), luckyMoneyMessage.getChannelId(), luckyMoneyMessage.getSendId(), luckyMoneyMessage.getNativeUrlString(), "", "", luckyMoneyMessage.getTalker(), "v1.0", timingIdentifier);
-                    XposedHelpers.callMethod(requestCaller, "a", luckyMoneyRequest, 0);
-                    luckyMoneyMessages.remove(0);
+                    callRequestCallerMethod(luckyMoneyMessage, timingIdentifier);
                 }
             }
 
@@ -145,6 +142,12 @@ public class LuckyMoneyHook {
             }
         });
 
+    }
+
+    private void callRequestCallerMethod(LuckyMoneyMessage luckyMoneyMessage, String timingIdentifier) {
+        Object luckyMoneyRequest = XposedHelpers.newInstance(HookClass.luckyMoneyRequestClass, luckyMoneyMessage.getMsgType(), luckyMoneyMessage.getChannelId(), luckyMoneyMessage.getSendId(), luckyMoneyMessage.getNativeUrlString(), "", "", luckyMoneyMessage.getTalker(), "v1.0", timingIdentifier);
+        XposedHelpers.callMethod(requestCaller, HookClass.requestCallerMethod, luckyMoneyRequest, 0);
+        luckyMoneyMessages.remove(0);
     }
 
 
@@ -182,9 +185,9 @@ public class LuckyMoneyHook {
         String sendId = nativeUrl.getQueryParameter("sendid");
         Log.i(TAG, "handleLuckyMoney: msgType:" + msgType + "::::channelId:" + channelId + ":::::sendId:" + sendId);
 
-        requestCaller = XposedHelpers.callStaticMethod(HookClass.networkRequest, getNetworkByModelMethod);
+        requestCaller = XposedHelpers.callStaticMethod(HookClass.networkRequest, HookClass.networkRequestName);
         Object o = XposedHelpers.newInstance(HookClass.ReceiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0");
-        XposedHelpers.callMethod(requestCaller, "a", o, 0);
+        XposedHelpers.callMethod(requestCaller, HookClass.requestCallerMethod, o, 0);
         luckyMoneyMessages.add(new LuckyMoneyMessage(msgType, channelId, sendId, nativeUrlString, talker));
 
     }
