@@ -1,5 +1,9 @@
 package qi.chuangguo.weixinxposed.util;
 
+import android.util.Log;
+
+import java.util.Map;
+
 import de.robv.android.xposed.XSharedPreferences;
 
 /**
@@ -11,6 +15,9 @@ public class PreferencesUtils {
     private static XSharedPreferences getInstance() {
         if (instance == null) {
             instance = new XSharedPreferences("qi.chuangguo.weixinxposed");
+            Map<String, ?> all = instance.getAll();
+            int size = all.size();
+            Log.i("PreferencesUtils", "getInstance: size"+size);
             instance.makeWorldReadable();
         } else {
             instance.reload();
