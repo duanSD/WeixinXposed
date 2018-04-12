@@ -54,4 +54,8 @@ public class PreferencesUtils {
     public static boolean getMyLuckyMoney(){
         return getInstance().getBoolean("my_LuckyMoney",false);
     }
+
+    public static String getPedometer(){
+        return getInstance().getString("pedometer","0");
+    }
 }

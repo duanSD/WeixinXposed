@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import qi.chuangguo.weixinxposed.util.HookClass;
@@ -21,6 +23,7 @@ public class PackgeManagerHook {
     private static String pagckgeName;
     private String TAG = PackgeManagerHook.class.getName();
     private String versionName;
+    private Object object = new Object();
 
     public static PackgeManagerHook getInstance(String pagckgeName) {
         packgeManagerHook.pagckgeName = pagckgeName;
@@ -30,31 +33,25 @@ public class PackgeManagerHook {
         return packgeManagerHook;
     }
 
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
-
     public String hookVersion(final XC_LoadPackage.LoadPackageParam lpparam) {
-
+        final HookClass hookClass = HookClass.getInstance();
         XposedHelpers.findAndHookMethod(ContextWrapper.class, "attachBaseContext", Context.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 Context mContext = (Context) param.args[0];
-                if (HookClass.versionName == null) {
-                    PackageManager packageManager = mContext.getPackageManager();
-                    PackageInfo packageInfo = packageManager.getPackageInfo(pagckgeName, 0);
-                    String versionName = packageInfo.versionName;
-                    setVersionName(versionName);
-                    Log.i(TAG, "beforeHookedMethod: versionName:" + versionName);
-                    HookClass.init(mContext, lpparam, versionName);
-                    LuckyMoneyHook.getLuckyMoneyHook().hook(lpparam);
-                    GameHook.getInstance().hook(lpparam);
-                    RevokeMsgHook.getInstance().hook(lpparam);
+                synchronized (object) {
+                    XposedBridge.log("init hook");
+                    if (TextUtils.isEmpty(versionName)) {
+                        PackageManager packageManager = mContext.getPackageManager();
+                        PackageInfo packageInfo = packageManager.getPackageInfo(pagckgeName, 0);
+                        PackgeManagerHook.this.versionName = packageInfo.versionName;
+                        hookClass.init(mContext, lpparam);
+                        LuckyMoneyHook.getLuckyMoneyHook().hook(lpparam);
+                        GameHook.getInstance().hook(lpparam);
+                        RevokeMsgHook.getInstance().hook(lpparam);
+                        DispatchSensorEventHook.getInstance().hook(lpparam);
+                    }
                 }
             }
 

@@ -81,5 +81,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="其他功能" android:key="set_rest"
+        >
+
+        <EditTextPreference
+            android:key="pedometer"
+            android:title="微信步数增加"
+            android:summary="在原基础上增加步数"
+            android:inputType="number"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>
 

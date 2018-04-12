@@ -27,7 +27,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
+        getPreferenceManager().setSharedPreferencesMode(MODE_PRIVATE);
         addPreferencesFromResource(R.xml.preference_headers);
         initListPreference();
 

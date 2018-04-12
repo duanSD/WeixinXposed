@@ -20,10 +20,6 @@ import qi.chuangguo.weixinxposed.LuckyMoneyMessage;
 import qi.chuangguo.weixinxposed.XmlToJson;
 import qi.chuangguo.weixinxposed.util.HookClass;
 import qi.chuangguo.weixinxposed.util.PreferencesUtils;
-import qi.chuangguo.weixinxposed.util.ReflectionUtil;
-
-import static qi.chuangguo.weixinxposed.util.HookClass.getNetworkByModelMethod;
-import static qi.chuangguo.weixinxposed.util.HookClass.luckyMoneyReceiveUI;
 
 /**
  * Created by qichuangguo on 2018/4/7.
@@ -186,8 +182,14 @@ public class LuckyMoneyHook {
         Log.i(TAG, "handleLuckyMoney: msgType:" + msgType + "::::channelId:" + channelId + ":::::sendId:" + sendId);
 
         requestCaller = XposedHelpers.callStaticMethod(HookClass.networkRequest, HookClass.networkRequestName);
+
+        Log.i(TAG, "handleLuckyMoney: HookClass.networkRequest:"+HookClass.networkRequest);
+        Log.i(TAG, "handleLuckyMoney: HookClass.networkRequestName:"+HookClass.networkRequestName);
+
         Object o = XposedHelpers.newInstance(HookClass.ReceiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0");
+        Log.i(TAG, "handleLuckyMoney: HookClass.ReceiveLuckyMoneyRequestClass:"+HookClass.ReceiveLuckyMoneyRequestClass);
         XposedHelpers.callMethod(requestCaller, HookClass.requestCallerMethod, o, 0);
+        Log.i(TAG, "handleLuckyMoney: HookClass.requestCallerMethod:"+HookClass.requestCallerMethod);
         luckyMoneyMessages.add(new LuckyMoneyMessage(msgType, channelId, sendId, nativeUrlString, talker));
 
     }
