@@ -305,7 +305,6 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         @Override
         protected void onPostExecute(List<LocationSimulationPo.DataBean> s) {
             super.onPostExecute(s);
-
             progressBar.dismiss();
             if (listData != null) {
                 listData.clear();
@@ -313,7 +312,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
             }
             if (s != null && s.size() > 0) {
                 for (int i = 0; i < s.size(); i++) {
-                    listData.add(s.get(i).getAddress());
+                    listData.add(s.get(i).getTitle());
                 }
                 listDataAdapter.notifyDataSetChanged();
                 typeSelectPopup.showAtLocation(MainActivity.this.getWindow().getDecorView(), Gravity.CENTER, 0, 0);
