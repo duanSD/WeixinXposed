@@ -25,4 +25,5 @@ dependencies {
     provided files('libs/api-82.jar')
     implementation 'net.dongliu:apk-parser:2.4.2'
     implementation 'com.android.support:appcompat-v7:26.0.0'
+    implementation 'com.google.code.gson:gson:2.2.4'
 }
