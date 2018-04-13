@@ -44,6 +44,7 @@ public class HookClass {
     private static List<String> wxClasses = new ArrayList();
     private Class storageFromPackage;
     private Class networkRequestType;
+    public static ReflectionUtil.Classes locationSimulationClasses;
 
     public static HookClass getInstance() {
         if (hookClass == null) {
@@ -158,6 +159,18 @@ public class HookClass {
             e.printStackTrace();
         }
         //----------结束-----------RecokeMsgHook
+
+        //----------开始-----------LocationSimulationHook
+        try{
+            locationSimulationClasses = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.modelgeo", 0)
+                      .filterByMethod(void.class, boolean.class, double.class, double.class, int.class, double.class, double.class, double.class, String.class, String.class, int.class)
+                      .filterByNoField("java.util.Map");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //----------结束----------LocationSimulationHook
+
         try {
         Log.i(TAG, "init: ReceiveLuckyMoneyRequestClass:" + ReceiveLuckyMoneyRequestClass.getName() + "\n" +
                   "ReceiveLuckyMoneyRequestClassMathe:" + ReceiveLuckyMoneyRequestClassMathe + "\n" +
@@ -176,6 +189,7 @@ public class HookClass {
             Log.i(TAG, "init: 打印异常");
             e.printStackTrace();
         }
+
     }
 
 }

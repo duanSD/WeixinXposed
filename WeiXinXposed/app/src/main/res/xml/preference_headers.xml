@@ -2,34 +2,30 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="微信红包" android:key="set_local"
-        >
+        android:key="set_local"
+        android:title="微信红包">
         <SwitchPreference
+            android:defaultValue="true"
             android:key="down_LuckyMoney"
-            android:title="点击领取"
             android:summary="点击红包自动领取"
-            android:defaultValue="true" >
-        </SwitchPreference>
+            android:title="点击领取"></SwitchPreference>
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="quick_LuckyMoney"
-            android:title="快速领取"
             android:summary="锁屏模式下可以自动领取"
-            android:defaultValue="false" >
-        </SwitchPreference>
+            android:title="快速领取"></SwitchPreference>
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="my_LuckyMoney"
-            android:title="自己发的不抢"
-            android:defaultValue="false" >
-        </SwitchPreference>
+            android:title="自己发的不抢"></SwitchPreference>
 
         <EditTextPreference
-            android:key="delayed_LuckyMoney"
-            android:title="延时抢红包"
-            android:summary="在快速抢红包功能开启时,进行延迟抢红包（单位秒）"
             android:inputType="number"
-            >
+            android:key="delayed_LuckyMoney"
+            android:summary="在快速抢红包功能开启时,进行延迟抢红包（单位秒）"
+            android:title="延时抢红包">
 
 
         </EditTextPreference>
@@ -37,59 +33,71 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="微信随机游戏" android:key="set_game">
+        android:key="set_game"
+        android:title="微信随机游戏">
 
         <SwitchPreference
-        android:key="dice_Game"
-        android:title="骰子游戏"
-        android:defaultValue="false" >
-        ></SwitchPreference>
+            android:defaultValue="false"
+            android:key="dice_Game"
+            android:title="骰子游戏">
+            >
+        </SwitchPreference>
 
         <ListPreference
-            android:key="@string/dice_value"
-            android:title="骰子游戏点数设置"
             android:dialogTitle="设置点数"
             android:entries="@array/dice_game"
             android:entryValues="@array/dice_game_value"
-            ></ListPreference>
+            android:key="@string/dice_value"
+            android:title="骰子游戏点数设置"></ListPreference>
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="rock_Game"
-            android:title="石头剪刀布"
-            android:defaultValue="false" >
-            </SwitchPreference>
+            android:title="石头剪刀布"></SwitchPreference>
 
         <ListPreference
-            android:key="@string/rock_value"
-            android:title="石头剪刀布设置"
             android:dialogTitle="需要出什么"
             android:entries="@array/rock_game"
             android:entryValues="@array/rock_value"
-            ></ListPreference>
+            android:key="@string/rock_value"
+            android:title="石头剪刀布设置"></ListPreference>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="微信消息" android:key="set_msg"
-        >
+        android:key="set_msg"
+        android:title="微信消息">
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="recall_msg"
-            android:title="消息防撤回"
-            android:defaultValue="false" >
-            ></SwitchPreference>
+            android:title="消息防撤回"></SwitchPreference>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="其他功能" android:key="set_rest"
-        >
+        android:key="set_rest"
+        android:title="其他功能">
 
         <EditTextPreference
+            android:inputType="number"
             android:key="pedometer"
-            android:title="微信步数增加"
             android:summary="在原基础上增加步数"
-            android:inputType="number"/>
+            android:title="微信步数增加" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="sw_locationSimu"
+            android:summary="共享位置和朋友圈位置"
+            android:title="位置信息修改">
+        </SwitchPreference>
+
+        <Preference
+            android:inputType="text"
+            android:key="pf_locationSimu"
+            android:summary="设置要代理的位置信息"
+            android:title="位置信息设置">
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

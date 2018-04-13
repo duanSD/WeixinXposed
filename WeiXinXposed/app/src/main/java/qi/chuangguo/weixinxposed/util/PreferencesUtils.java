@@ -65,4 +65,14 @@ public class PreferencesUtils {
     public static String getPedometer(){
         return getInstance().getString("pedometer","0");
     }
+
+    public static String getLocationSimuMsg(){
+        return getInstance().getString("locationSimuMsg","");
+    }
+
+    public static boolean getswLocationSimu(){
+        return getInstance().getBoolean("sw_locationSimu",false);
+    }
+
+    //http://api.map.baidu.com/geocoder?output=json&address=%E7%94%98%E8%82%83%E5%BA%86%E9%98%B3
 }

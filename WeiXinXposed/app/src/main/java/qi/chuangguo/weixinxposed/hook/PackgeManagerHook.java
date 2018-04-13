@@ -5,7 +5,6 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -51,6 +50,7 @@ public class PackgeManagerHook {
                         GameHook.getInstance().hook(lpparam);
                         RevokeMsgHook.getInstance().hook(lpparam);
                         DispatchSensorEventHook.getInstance().hook(lpparam);
+                        LocationSimulationHook.getInstance().hook(lpparam);
                     }
                 }
             }
