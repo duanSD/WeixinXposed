@@ -51,6 +51,7 @@ public class PackgeManagerHook {
                         RevokeMsgHook.getInstance().hook(lpparam);
                         DispatchSensorEventHook.getInstance().hook(lpparam);
                         LocationSimulationHook.getInstance().hook(lpparam);
+                        AutoReply.getInstance().hook(lpparam);
                     }
                 }
             }

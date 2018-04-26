@@ -30,6 +30,7 @@ public class LuckyMoneyHook {
     private String TAG = "LuckyMoneyHook";
     private Object requestCaller;
     private List<LuckyMoneyMessage> luckyMoneyMessages = new ArrayList();
+
     private LuckyMoneyHook() {
     }
 
@@ -46,7 +47,6 @@ public class LuckyMoneyHook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                //Log.i("Main", "beforeHookedMethod: 执行结束");
             }
 
             @Override
@@ -65,7 +65,6 @@ public class LuckyMoneyHook {
                 if (!TextUtils.isEmpty(paramStr) && paramStr.equals("message")) {
                     Integer type = localContentValues.getAsInteger("type");
                     if (type != null) {
-                        //Log.i(TAG, "afterHookedMethod: type:" + type);
                         if ((type.intValue() == 436207665) || (type.intValue() == 469762097)) {
                             handleLuckyMoney(localContentValues, loadPackageParam);
                         } else if (type.intValue() == 10000) {
@@ -86,6 +85,8 @@ public class LuckyMoneyHook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
+
+
                 if (!PreferencesUtils.getDownluckyMoney()) {
                     return;
                 }
@@ -98,7 +99,6 @@ public class LuckyMoneyHook {
                     return;
                 }
                 final LuckyMoneyMessage luckyMoneyMessage = luckyMoneyMessages.get(0);
-
                 String delayed = PreferencesUtils.getDelayedLuckyMoney();
                 int delayedTime = 0;
                 if (!TextUtils.isEmpty(delayed)) {
@@ -155,42 +155,32 @@ public class LuckyMoneyHook {
         }
 
         String talker = localContentValues.getAsString("talker");
-        Log.i(TAG, "handleLuckyMoney: 发送人的ID:" + talker);
-
         int isSend = localContentValues.getAsInteger("isSend");
-
         if (isSend == 1 && PreferencesUtils.getMyLuckyMoney()) {
             return;
         }
-        Log.i(TAG, "handleLuckyMoney: 是否是自己发送的:" + isSend + ":::ssss::::" + PreferencesUtils.getMyLuckyMoney());
-
+        
         String content = localContentValues.getAsString("content");
-        Log.i(TAG, "handleLuckyMoney: 消息内容：" + content);
         if (!content.startsWith("<msg")) {
             content = content.substring(content.indexOf("<msg"));
         }
-
         JSONObject wcpayinfo = new XmlToJson.Builder(content).build().getJSONObject("msg").getJSONObject("appmsg").getJSONObject("wcpayinfo");
         String senderTitle = wcpayinfo.getString("sendertitle");
-        Log.i(TAG, "handleLuckyMoney:senderTitle:" + senderTitle);
+
+        JSONObject message = new XmlToJson.Builder(content).build().getJSONObject("msg");
+        String fromusername = message.getString("fromusername");
+
+        Log.i(TAG, "handleLuckyMoney: fromusername:"+fromusername);
 
         String nativeUrlString = wcpayinfo.getString("nativeurl");
         Uri nativeUrl = Uri.parse(nativeUrlString);
         int msgType = Integer.parseInt(nativeUrl.getQueryParameter("msgtype"));
         int channelId = Integer.parseInt(nativeUrl.getQueryParameter("channelid"));
         String sendId = nativeUrl.getQueryParameter("sendid");
-        Log.i(TAG, "handleLuckyMoney: msgType:" + msgType + "::::channelId:" + channelId + ":::::sendId:" + sendId);
-
         requestCaller = XposedHelpers.callStaticMethod(HookClass.networkRequest, HookClass.networkRequestName);
-
-        Log.i(TAG, "handleLuckyMoney: HookClass.networkRequest:"+HookClass.networkRequest);
-        Log.i(TAG, "handleLuckyMoney: HookClass.networkRequestName:"+HookClass.networkRequestName);
-
         Object o = XposedHelpers.newInstance(HookClass.ReceiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0");
-        Log.i(TAG, "handleLuckyMoney: HookClass.ReceiveLuckyMoneyRequestClass:"+HookClass.ReceiveLuckyMoneyRequestClass);
-        XposedHelpers.callMethod(requestCaller, HookClass.requestCallerMethod, o, 0);
-        Log.i(TAG, "handleLuckyMoney: HookClass.requestCallerMethod:"+HookClass.requestCallerMethod);
         luckyMoneyMessages.add(new LuckyMoneyMessage(msgType, channelId, sendId, nativeUrlString, talker));
+        XposedHelpers.callMethod(requestCaller, HookClass.requestCallerMethod, o, 0);
 
     }
 

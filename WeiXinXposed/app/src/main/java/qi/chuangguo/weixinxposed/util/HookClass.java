@@ -45,6 +45,11 @@ public class HookClass {
     private Class storageFromPackage;
     private Class networkRequestType;
     public static ReflectionUtil.Classes locationSimulationClasses;
+    public static Class autoReplyConstructorsclasses;
+    public static Class autoReplyNotificationClass;
+    public static String autoReplyNotificationMath;
+    public static Class storageClass;
+    public static String autoReplyConstructorsMethod;
 
     public static HookClass getInstance() {
         if (hookClass == null) {
@@ -170,6 +175,33 @@ public class HookClass {
             e.printStackTrace();
         }
         //----------结束----------LocationSimulationHook
+
+
+        //----------开始------------AutoReply----------------------
+
+        try {
+            autoReplyConstructorsclasses = ReflectionUtil.findClassesFromPackage(lpparam.classLoader,wxClasses,"com.tencent.mm.ui.chatting",0)
+                      .filterByField("android.os.Vibrator")
+                      .filterByField("android.widget.ListView")
+                      .filterByField("android.media.ToneGenerator")
+                      .filterByMethod(void.class,"release")
+                      .filterByMethod(void.class,"releaseWakeLock").firstOrNull();
+
+            autoReplyConstructorsMethod = ReflectionUtil.findMethodsByExactParameters(autoReplyConstructorsclasses, boolean.class, String.class).getName();
+
+            autoReplyNotificationClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader,wxClasses,"com.tencent.mm.booter.notification",0)
+                       .filterByMethod(android.os.Looper.class,"getLooper")
+                       .filterByMethod(void.class,"cancelNotification",String.class)
+                       .firstOrNull();
+
+            storageClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader,wxClasses,"com.tencent.mm.storage",0)
+                          .filterByMethod(int.class,"getType")
+                          .filterByMethod(boolean.class,"isSystem")
+                          .firstOrNull();
+            autoReplyNotificationMath = ReflectionUtil.findMethodsByExactParameters(autoReplyNotificationClass, void.class, storageClass).getName();
+        }catch (Exception e){e.printStackTrace();}
+
+        //----------结束------------AutoReply----------------------
 
         try {
         Log.i(TAG, "init: ReceiveLuckyMoneyRequestClass:" + ReceiveLuckyMoneyRequestClass.getName() + "\n" +
