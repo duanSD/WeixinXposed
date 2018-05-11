@@ -56,9 +56,11 @@ public class AutoReply {
                 Log.i(TAG, "afterHookedMethod: str:"+str+"::str2:"+str2);
                 if (!str2.contains("@chatroom") && !str2.startsWith("gh_")) {
                     if (!str.equals("")) {
-                       boolean fz= (boolean) XposedHelpers.callMethod(thisObject, HookClass.autoReplyConstructorsMethod, new Object[]{str});return;
+                       boolean fz= (boolean) XposedHelpers.callMethod(thisObject, HookClass.autoReplyConstructorsMethod, new Object[]{str});
                     }
                     return;
+                }else {
+                    boolean fz= (boolean) XposedHelpers.callMethod(thisObject, HookClass.autoReplyConstructorsMethod, new Object[]{str});
                 }
 
             }

@@ -60,7 +60,7 @@ public class LuckyMoneyHook {
                 ContentValues localContentValues = (ContentValues) param.args[2];
                 String paramStr = (String) param.args[0];
 
-                //Log.i(TAG, "afterHookedMethod: localContentValues:" + localContentValues.toString());
+                Log.i(TAG, "afterHookedMethod: localContentValues:" + localContentValues.toString());
 
                 if (!TextUtils.isEmpty(paramStr) && paramStr.equals("message")) {
                     Integer type = localContentValues.getAsInteger("type");
