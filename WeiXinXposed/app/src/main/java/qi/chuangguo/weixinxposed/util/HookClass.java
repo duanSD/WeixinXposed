@@ -50,6 +50,7 @@ public class HookClass {
     public static String autoReplyNotificationMath;
     public static Class storageClass;
     public static String autoReplyConstructorsMethod;
+    public static Class modelmultiClass;
 
     public static HookClass getInstance() {
         if (hookClass == null) {
@@ -199,6 +200,11 @@ public class HookClass {
                           .filterByMethod(boolean.class,"isSystem")
                           .firstOrNull();
             autoReplyNotificationMath = ReflectionUtil.findMethodsByExactParameters(autoReplyNotificationClass, void.class, storageClass).getName();
+            modelmultiClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader,wxClasses,"com.tencent.mm.modelmulti",0)
+              .filterByField("java.util.List")
+              .filterByMethod(int.class,"getType")
+              .firstOrNull();
+
         }catch (Exception e){e.printStackTrace();}
 
         //----------结束------------AutoReply----------------------

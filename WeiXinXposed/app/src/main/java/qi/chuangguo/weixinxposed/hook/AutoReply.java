@@ -1,5 +1,6 @@
 package qi.chuangguo.weixinxposed.hook;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -16,6 +17,8 @@ public class AutoReply {
     private static AutoReply autoReply;
     private static Object thisObject;
     private String TAG="AutoReply";
+    private Object yRO;
+    private String currentContent;
     public static AutoReply getInstance() {
         if (autoReply==null){
             autoReply = new AutoReply();
@@ -49,13 +52,11 @@ public class AutoReply {
                 super.afterHookedMethod(param);
                 String str = (String) XposedHelpers.getObjectField(param.args[0], "field_content");
                 String str2 = (String) XposedHelpers.getObjectField(param.args[0], "field_talker");
+                currentContent=str2;
                 Log.i(TAG, "afterHookedMethod: str:"+str+"::str2:"+str2);
                 if (!str2.contains("@chatroom") && !str2.startsWith("gh_")) {
-                    str = "你好";
                     if (!str.equals("")) {
-                       boolean fz= (boolean) XposedHelpers.callMethod(thisObject, HookClass.autoReplyConstructorsMethod, new Object[]{str});
-                        Log.i(TAG, "afterHookedMethod: fz"+fz);
-                        return;
+                       boolean fz= (boolean) XposedHelpers.callMethod(thisObject, HookClass.autoReplyConstructorsMethod, new Object[]{str});return;
                     }
                     return;
                 }
@@ -63,6 +64,26 @@ public class AutoReply {
             }
         }});
 
+        XposedBridge.hookAllConstructors(HookClass.modelmultiClass, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                if (param.args!=null && param.args.length>2) {
+                    for (int i = 0; i < param.args.length; i++) {
+                        Log.i(TAG, "beforeHookedMethod: param.args[" + i + "]：：：：" + param.args[i]);
+                    }
+                    if (!TextUtils.isEmpty(currentContent)) {
+                        param.args[0] = currentContent;
+                        param.args[1] = "我是自动回复";
+                    }
+                }
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
+            }
+        });
 
     }
 }
