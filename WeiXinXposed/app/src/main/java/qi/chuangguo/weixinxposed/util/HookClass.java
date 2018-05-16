@@ -51,6 +51,7 @@ public class HookClass {
     public static Class storageClass;
     public static String autoReplyConstructorsMethod;
     public static Class modelmultiClass;
+    public static Class aClass;
 
     public static HookClass getInstance() {
         if (hookClass == null) {

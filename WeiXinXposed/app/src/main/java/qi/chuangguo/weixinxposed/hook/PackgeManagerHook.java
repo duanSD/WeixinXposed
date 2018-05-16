@@ -11,6 +11,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import qi.chuangguo.weixinxposed.util.HookClass;
+import qi.chuangguo.weixinxposed.util.PreferencesUtils;
 
 /**
  * Created by chuangguo.qi on 2018/4/10.
@@ -51,7 +52,11 @@ public class PackgeManagerHook {
                         RevokeMsgHook.getInstance().hook(lpparam);
                         DispatchSensorEventHook.getInstance().hook(lpparam);
                         LocationSimulationHook.getInstance().hook(lpparam);
-                        AutoReply.getInstance().hook(lpparam);
+                        String autoReply = PreferencesUtils.autoReply();
+                        boolean autoReplyswitch = PreferencesUtils.autoReplyswitch();
+                        if (autoReplyswitch && !TextUtils.isEmpty(autoReply) && autoReply.length()>5) {
+                            AutoReply.getInstance().hook(lpparam,autoReply);
+                        }
                     }
                 }
             }

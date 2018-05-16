@@ -74,5 +74,21 @@ public class PreferencesUtils {
         return getInstance().getBoolean("sw_locationSimu",false);
     }
 
+    public static String autoReply(){
+        return getInstance().getString("autoReply","");
+    }
+
+    public static boolean autoReplyswitch(){
+        return getInstance().getBoolean("autoReplyswitch",false);
+    }
+
+    public static boolean autoReplysuffix(){
+        return getInstance().getBoolean("autoReplysuffix",false);
+    }
+
+    public static String autoReplyEditText(){
+        return getInstance().getString("autoReplyEditText","");
+    }
+
     //http://api.map.baidu.com/geocoder?output=json&address=%E7%94%98%E8%82%83%E5%BA%86%E9%98%B3
 }

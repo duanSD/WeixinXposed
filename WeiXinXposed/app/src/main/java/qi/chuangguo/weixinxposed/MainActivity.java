@@ -57,6 +57,12 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
     private List<String> listData = new ArrayList<>();
     private PopupWindow typeSelectPopup;
     private List<LocationSimulationPo.DataBean> locationSimulationPodata;
+    private EditTextPreference autoReply;
+    private SwitchPreference autoReplyswitch;
+    private SwitchPreference autoReplysuffix;
+    private EditTextPreference autoReplyEditText;
+    private ListPreference dice_lp;
+    private ListPreference rock_lp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,11 +88,11 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // String value = listData.get(position);
-                if (locationSimulationPodata!=null && locationSimulationPodata.size()>0){
+                if (locationSimulationPodata != null && locationSimulationPodata.size() > 0) {
                     for (int i = 0; i < locationSimulationPodata.size(); i++) {
                         double lng = locationSimulationPodata.get(i).getLocation().getLng();
                         double lat = locationSimulationPodata.get(i).getLocation().getLat();
-                        String s = lng+","+lat;
+                        String s = lng + "," + lat;
                         if (!TextUtils.isEmpty(s)) {
                             SharedPreferences sharedPreferences = MainActivity.this.getPreferenceManager().getSharedPreferences();
                             sharedPreferences.edit().putString("locationSimuMsg", s).apply();
@@ -104,7 +110,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
             }
         });
 
-        typeSelectPopup = new PopupWindow(mTypeLv, width*3/4, height*3/4, true);
+        typeSelectPopup = new PopupWindow(mTypeLv, width * 3 / 4, height * 3 / 4, true);
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.bg_corner);
         typeSelectPopup.setBackgroundDrawable(drawable);
         typeSelectPopup.setFocusable(true);
@@ -134,13 +140,17 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         });
 
 
-        ListPreference dice_lp = (ListPreference) findPreference(getResources().getString(R.string.dice_value));
+        dice_lp = (ListPreference) findPreference(getResources().getString(R.string.dice_value));
         dice_lp.setOnPreferenceChangeListener(this);
         dice_lp.setSummary(dice_lp.getEntry());
+        dice_lp.setShouldDisableView(true);
 
-        ListPreference rock_lp = (ListPreference) findPreference(getResources().getString(R.string.rock_value));
+
+        rock_lp = (ListPreference) findPreference(getResources().getString(R.string.rock_value));
         rock_lp.setOnPreferenceChangeListener(this);
         rock_lp.setSummary(rock_lp.getEntry());
+        rock_lp.setShouldDisableView(true);
+
 
         down_luckyMoney = (SwitchPreference) findPreference("down_LuckyMoney");
         down_luckyMoney.setOnPreferenceChangeListener(this);
@@ -171,7 +181,32 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
 
         pf_locationSimu = findPreference("pf_locationSimu");
         pf_locationSimu.setOnPreferenceClickListener(this);
+        pf_locationSimu.setShouldDisableView(true);
 
+
+        autoReply = (EditTextPreference) findPreference("autoReply");
+        autoReply.setOnPreferenceChangeListener(this);
+        autoReply.setShouldDisableView(true);
+
+
+        autoReplyswitch = (SwitchPreference) findPreference("autoReplyswitch");
+        autoReplyswitch.setOnPreferenceChangeListener(this);
+
+        autoReplysuffix = (SwitchPreference) findPreference("autoReplysuffix");
+        autoReplysuffix.setOnPreferenceChangeListener(this);
+
+        autoReplyEditText = (EditTextPreference) findPreference("autoReplyEditText");
+        autoReplyEditText.setOnPreferenceChangeListener(this);
+        autoReplyEditText.setShouldDisableView(true);
+        autoReplyEditText.setShouldDisableView(true);
+
+
+
+        autoReplyEditText.setEnabled(autoReplysuffix.isChecked());
+        autoReply.setEnabled(autoReplyswitch.isChecked());
+        pf_locationSimu.setEnabled(sw_locationSimu.isChecked());
+        rock_lp.setEnabled(rock_game.isChecked());
+        dice_lp.setEnabled(dice_game.isChecked());
         //delayed_luckyMoney.
     }
 
@@ -188,8 +223,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object o) {
+        String key = preference.getKey();
         if (preference instanceof ListPreference) {
-            String key = preference.getKey();
             if (!TextUtils.isEmpty(key) && key.equals(getString(R.string.rock_value))) {
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue((String) o);
@@ -200,37 +235,39 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 int index = listPreference.findIndexOfValue((String) o);
                 CharSequence[] entries = listPreference.getEntries();
                 listPreference.setSummary(entries[index]);
-            } else if (!TextUtils.isEmpty(key) && key.equals("down_LuckyMoney")) {
-                if (down_luckyMoney.isChecked() != (Boolean) o) {
-                    down_luckyMoney.setChecked((Boolean) o);
-                }
-            } else if (!TextUtils.isEmpty(key) && key.equals("quick_LuckyMoney")) {
-                if (quick_luckyMoney.isChecked() != (Boolean) o) {
-                    quick_luckyMoney.setChecked((Boolean) o);
-                }
-            } else if (!TextUtils.isEmpty(key) && key.equals("dice_Game")) {
-                if (dice_game.isChecked() != (Boolean) o) {
-                    dice_game.setChecked((Boolean) o);
+            }
+        } else if (!TextUtils.isEmpty(key) && key.equals("rock_Game")) {
+            if ((Boolean) o) {
+                rock_lp.setEnabled(true);
+            } else {
+                rock_lp.setEnabled(false);
+            }
+        }else if (!TextUtils.isEmpty(key) && key.equals("dice_Game")){
 
-                }
-            } else if (!TextUtils.isEmpty(key) && key.equals("rock_Game")) {
-                if (rock_game.isChecked() != (Boolean) o) {
-                    rock_game.setChecked((Boolean) o);
-                }
-            } else if (!TextUtils.isEmpty(key) && key.equals("recall_msg")) {
-                if (recall_msg.isChecked() != (Boolean) o) {
-                    recall_msg.setChecked((Boolean) o);
-                }
-            } else if (!TextUtils.isEmpty(key) && key.equals("my_luckyMoney")) {
-                if (my_luckyMoney.isChecked() != (Boolean) o) {
-                    my_luckyMoney.setChecked((Boolean) o);
-                }
-            } else if (!TextUtils.isEmpty(key) && key.equals("sw_locationSimu")) {
-                if (sw_locationSimu.isChecked() != (Boolean) o) {
-                    sw_locationSimu.setChecked((Boolean) o);
-                }
+            if ((Boolean) o){
+                dice_lp.setEnabled(true);
+            }else {
+                dice_lp.setEnabled(false);
             }
 
+        }else if (!TextUtils.isEmpty(key) && key.equals("autoReplyswitch")) {
+            if ((Boolean) o) {
+                autoReply.setEnabled(true);
+            } else {
+                autoReply.setEnabled(false);
+            }
+        } else if (!TextUtils.isEmpty(key) && key.equals("autoReplysuffix")) {
+            if ((Boolean) o) {
+                autoReplyEditText.setEnabled(true);
+            } else {
+                autoReplyEditText.setEnabled(false);
+            }
+        } else if (!TextUtils.isEmpty(key) && key.equals("sw_locationSimu")) {
+            if ((Boolean) o) {
+                pf_locationSimu.setEnabled(true);
+            } else {
+                pf_locationSimu.setEnabled(false);
+            }
         }
         return true;
     }
@@ -319,7 +356,7 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 WindowManager.LayoutParams lp = getWindow().getAttributes();
                 lp.alpha = 0.5f; //0.0-1.0
                 getWindow().setAttributes(lp);
-            }else {
+            } else {
                 Toast.makeText(MainActivity.this, "获取失败", Toast.LENGTH_SHORT).show();
             }
 

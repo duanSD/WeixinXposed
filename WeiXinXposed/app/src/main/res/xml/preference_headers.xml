@@ -73,6 +73,34 @@
             android:key="recall_msg"
             android:title="消息防撤回"></SwitchPreference>
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autoReplyswitch"
+            android:title="消息自动回复"
+            android:summary="必须填写下面的apiKey。开启功能后需要重启微信"
+            >
+        </SwitchPreference>
+
+        <EditTextPreference
+            android:inputType="text"
+            android:key="autoReply"
+            android:summary="去图灵官网注册获取apikey"
+            android:title="自动回复的图灵apiKey" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autoReplysuffix"
+            android:title="消息自动回复小尾巴"
+            android:summary="打开选项自动回复的消息带小尾巴。开启功能后需要重启微信"
+            >
+        </SwitchPreference>
+
+        <EditTextPreference
+            android:inputType="text"
+            android:key="autoReplyEditText"
+            android:title="定义回复的小尾巴"
+            android:summary="定义回复的小尾巴默认自动回复" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

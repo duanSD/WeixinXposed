@@ -26,4 +26,7 @@ dependencies {
     implementation 'net.dongliu:apk-parser:2.4.2'
     implementation 'com.android.support:appcompat-v7:26.0.0'
     implementation 'com.google.code.gson:gson:2.2.4'
+    compile 'com.squareup.okio:okio:1.14.0'
+    implementation files('libs/okhttp-3.10.0.jar')
+    implementation 'com.google.code.gson:gson:2.2.4'
 }
