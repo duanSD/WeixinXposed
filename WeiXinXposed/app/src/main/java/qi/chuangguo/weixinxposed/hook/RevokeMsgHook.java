@@ -27,7 +27,6 @@ public class RevokeMsgHook {
     public static RevokeMsgHook getInstance() {
         if (revokeMsgHook == null) {
             revokeMsgHook = new RevokeMsgHook();
-            return revokeMsgHook;
         }
         return revokeMsgHook;
     }

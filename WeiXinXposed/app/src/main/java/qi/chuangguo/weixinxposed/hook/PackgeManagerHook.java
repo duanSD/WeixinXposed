@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -25,10 +26,13 @@ public class PackgeManagerHook {
     private String versionName;
     private Object object = new Object();
 
+
     public static PackgeManagerHook getInstance(String pagckgeName) {
         packgeManagerHook.pagckgeName = pagckgeName;
         if (packgeManagerHook == null) {
-            return new PackgeManagerHook();
+            Log.i("PackgeManagerHook", "getInstance: ");
+            XposedBridge.log("init pagckgeName");
+            packgeManagerHook = new PackgeManagerHook();
         }
         return packgeManagerHook;
     }
@@ -40,13 +44,17 @@ public class PackgeManagerHook {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
                 Context mContext = (Context) param.args[0];
+                if (mContext == null) {
+                    return;
+                }
                 synchronized (object) {
+                    Log.i(TAG, "beforeHookedMethod: init hook");
                     XposedBridge.log("init hook");
                     if (TextUtils.isEmpty(versionName)) {
                         PackageManager packageManager = mContext.getPackageManager();
                         PackageInfo packageInfo = packageManager.getPackageInfo(pagckgeName, 0);
                         PackgeManagerHook.this.versionName = packageInfo.versionName;
-                        hookClass.init(mContext, lpparam);
+                        hookClass.init(mContext, lpparam,versionName);
                         LuckyMoneyHook.getLuckyMoneyHook().hook(lpparam);
                         GameHook.getInstance().hook(lpparam);
                         RevokeMsgHook.getInstance().hook(lpparam);
@@ -54,8 +62,8 @@ public class PackgeManagerHook {
                         LocationSimulationHook.getInstance().hook(lpparam);
                         String autoReply = PreferencesUtils.autoReply();
                         boolean autoReplyswitch = PreferencesUtils.autoReplyswitch();
-                        if (autoReplyswitch && !TextUtils.isEmpty(autoReply) && autoReply.length()>5) {
-                            AutoReply.getInstance().hook(lpparam,autoReply);
+                        if (autoReplyswitch && !TextUtils.isEmpty(autoReply) && autoReply.length() > 5) {
+                            AutoReply.getInstance().hook(lpparam, autoReply);
                         }
                     }
                 }

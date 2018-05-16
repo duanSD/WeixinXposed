@@ -19,7 +19,7 @@ public class GameHook {
     private static GameHook gameHook;
     public static GameHook getInstance() {
         if (gameHook==null){
-           return gameHook=new GameHook();
+            gameHook=new GameHook();
         }
         return gameHook;
     }

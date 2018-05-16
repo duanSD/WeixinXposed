@@ -36,7 +36,7 @@ public class LuckyMoneyHook {
 
     public static LuckyMoneyHook getLuckyMoneyHook() {
         if (luckyMoneyHook == null) {
-            return luckyMoneyHook = new LuckyMoneyHook();
+             luckyMoneyHook = new LuckyMoneyHook();
         }
         return luckyMoneyHook;
     }
